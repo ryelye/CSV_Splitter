@@ -44,16 +44,10 @@ output_path_full = os.path.join(output_path, output_name_template)
 df = pd.read_csv(input_file, delimiter=delimiter, header=input_header)
 chunks = math.ceil(len(df) / row_limit)
 dt = {}
-for i in range(chunks):
-    dt[i] = [row_limit * i, row_limit * (i+1)]
 
-# if input has no header, then don't output a header too
-# if input_header == 0:
+# write each chunk to a new file
 for i in range(chunks):
+    dt[i] = [row_limit * i, row_limit * (i + 1)]
     df[dt[i][0]:dt[i][1]].to_csv(output_path_full % i, header=output_header if input_header == 0 else False, index=False)
-# if there is no input header, there is no output header too.
-# elif input_header is None:
-#     for i in range(chunks):
-#         df[dt[i][0]:dt[i][1]].to_csv(output_name_template % i, header=False, index=False)
 
-print('Split complete. Outputted to file: %s' % output_name_template % '', 'Total files = %s' % chunks)
+print('Split complete. Outputted to file: %s' % output_name_template % '', 'Total files=%s' % chunks)
